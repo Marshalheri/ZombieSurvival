@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ZombieSurvival.Client</name>
+    </assembly>
+    <members>
+        <member name="M:ZombieSurvival.Client.Controllers.ReportController.GetInfectionPercentage">
+            <summary>
+            Get the percentage of infected or non-infected survivors
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ZombieSurvival.Client.Controllers.ReportController.GetPointsLost">
+            <summary>
+            Get total points lost because of infection
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ZombieSurvival.Client.Controllers.SurvivorController.ProfileSurvivor(ZombieSurvival.Core.DTOs.ProfileSurvivorRequestDTO)">
+            <summary>
+            Profile Survivor
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ZombieSurvival.Client.Controllers.SurvivorController.UpdateSurvivorLocation(ZombieSurvival.Core.DTOs.UpdateSurvivorLocationRequestDTO)">
+            <summary>
+            Update Survivor Location
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ZombieSurvival.Client.Controllers.SurvivorController.ReportContaminatedSurvivor(System.String)">
+            <summary>
+            Report Contaminated Survivor
+            </summary>
+            <param name="Username"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ZombieSurvival.Client.Controllers.SurvivorController.ReportContaminatedSurvivor(ZombieSurvival.Core.DTOs.TradeRequestDTO)">
+            <summary>
+            Trade items 
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ZombieSurvival.Client.Controllers.SurvivorController.GetSurvivor(System.String)">
+            <summary>
+            Get Survivor details
+            </summary>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

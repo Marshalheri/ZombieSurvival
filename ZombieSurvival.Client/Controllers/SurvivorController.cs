@@ -102,5 +102,25 @@ namespace ZombieSurvival.Client.Controllers
             }
             return Ok();
         }
+        
+        /// <summary>
+        /// Get Survivor details
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        [HttpGet("details")]
+        [ProducesResponseType(typeof(GetSurvivorResponseDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<IActionResult> GetSurvivor([FromQuery] string username)
+        {
+            var result = await _service.GetSurvivorAsync(username);
+
+            if (!result.IsSuccessful)
+            {
+                return CreateResponse(result.Error, result.FaultType);
+            }
+            return Ok(result.GetPayload());
+        }
     }
 }

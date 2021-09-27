@@ -14,5 +14,6 @@ namespace ZombieSurvival.Core
         Task<BasicResponse> UpdateSurvivorLocationAsync(UpdateSurvivorLocationRequestDTO request);
         Task<BasicResponse> ReportContaminatedSurvivorAsync(string username);
         Task<BasicResponse> TradeAsync(TradeRequestDTO request);
+        Task<PayloadResponse<GetSurvivorResponseDTO>> GetSurvivorAsync(string username);
     }
 }

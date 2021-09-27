@@ -25,6 +25,33 @@ namespace ZombieSurvival.Core.Implementations
             _settings = settings.Value;
         }
 
+        public async Task<PayloadResponse<GetSurvivorResponseDTO>> GetSurvivorAsync(string username)
+        {
+            var response = new PayloadResponse<GetSurvivorResponseDTO>(false);
+
+            var user = await _unitOfWork.SurvivorRepository.GetAsync(x => x.Username == username && x.IsInfected == false, includes: c => c.Inventories);
+            if (user == null)
+            {
+                return ErrorResponse.Create<PayloadResponse<GetSurvivorResponseDTO>>(FaultMode.REQUESTED_ENTITY_NOT_FOUND, "E003", "Username not found");
+            }
+            var payload = new GetSurvivorResponseDTO
+            {
+                Name = user.Name,
+                Username = user.Username,
+                Age = user.Age,
+                Gender = user.Gender,
+                Latitude = user.Latitude,
+                Longitude = user.Longitude,
+                ContaminationCount = user.ContaminationCount,
+                Inventory = user.Inventories.Select(x => new SurvivorInventoryDTO { Name = x.Name, Point = x.Point }).ToList()
+            };
+
+            response.SetPayload(payload);
+            response.IsSuccessful = true;
+
+            return response;
+        }
+
         public async Task<BasicResponse> ProfileSurvivorAsync(ProfileSurvivorRequestDTO request)
         {
             _logger.LogInformation($"{nameof(request)} => {Util.SerializeAsJson(request)}");
@@ -87,7 +114,7 @@ namespace ZombieSurvival.Core.Implementations
             {
                 _logger.LogError(ex, "ERROR PROFILING SURVIVOR");
                 throw new Exception("ERROR PROFILING SURVIVOR");
-            }          
+            }
 
             return response;
         }
@@ -140,20 +167,20 @@ namespace ZombieSurvival.Core.Implementations
                         "E001",
                         $"Invalid input parameter - {problemSource}");
             };
-            
+
             var buyer = await _unitOfWork.SurvivorRepository.GetAsync(x => x.Username == request.BuyerUsername && x.IsInfected == false, includes: c => c.Inventories);
             if (buyer == null)
             {
                 return ErrorResponse.Create<BasicResponse>(FaultMode.REQUESTED_ENTITY_NOT_FOUND, "E003", $"Username not found {request.BuyerUsername}");
             }
-            
+
             var seller = await _unitOfWork.SurvivorRepository.GetAsync(x => x.Username == request.SellerUsername && x.IsInfected == false, includes: c => c.Inventories);
             if (seller == null)
             {
                 return ErrorResponse.Create<BasicResponse>(FaultMode.REQUESTED_ENTITY_NOT_FOUND, "E003", $"Username not found {request.SellerUsername}");
             }
 
-            var prices = await _unitOfWork.PriceRepository.GetAllAsync(); 
+            var prices = await _unitOfWork.PriceRepository.GetAllAsync();
             if (prices.Count < 1)
             {
                 return ErrorResponse.Create<BasicResponse>(FaultMode.REQUESTED_ENTITY_NOT_FOUND, "E004", "Prices not found");
@@ -194,7 +221,7 @@ namespace ZombieSurvival.Core.Implementations
 
                 if (sellerItem.Point < point)
                 {
-                    return ErrorResponse.Create<BasicResponse>(FaultMode.CLIENT_INVALID_ARGUMENT, 
+                    return ErrorResponse.Create<BasicResponse>(FaultMode.CLIENT_INVALID_ARGUMENT,
                             "E005", $"{request.SellerUsername} does not have enough {item.Item.ToString()} to complete the transaction");
                 }
                 sellerItem.Point -= point;
